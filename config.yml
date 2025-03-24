@@ -1,0 +1,111 @@
+# Offensive Scanner Configuration
+
+# General settings
+general:
+  timeout: 30  # Default timeout in seconds
+  threads: 10  # Default number of threads
+  verbose: false
+  debug: false
+  user_agent: "Offensive-Scanner/1.0"
+  output_dir: "./reports"
+  database_path: "./database/scans.db"
+
+# Port scanning settings
+port_scan:
+  default_ports: "21,22,23,25,53,80,110,111,135,139,143,443,445,993,995,1723,3306,3389,5900,8080"
+  scan_type: "SYN"  # Options: SYN, CONNECT, UDP
+  timeout: 5
+  threads: 50
+  min_rate: 100
+  max_retries: 3
+
+# Service enumeration settings
+service_enum:
+  scripts: "default,banner,version"
+  timeout: 10
+
+# Web scanning settings
+web_scan:
+  max_depth: 3
+  timeout: 15
+  threads: 5
+  forms: true
+  cookies: true
+  user_agent: "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36"
+  headers:
+    Accept: "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8"
+    Accept-Language: "en-US,en;q=0.5"
+  checks:
+    xss: true
+    sqli: true
+    lfi: true
+    rfi: true
+    csrf: true
+    open_redirect: true
+    ssrf: true
+
+# Network scanning settings
+network_scan:
+  timeout: 1000  # ms
+  threads: 50
+  os_detection: true
+
+# Brute force settings
+brute_force:
+  services: "ssh,ftp,smb"
+  timeout: 5000  # ms
+  threads: 10
+  max_attempts: 500
+  usernames_file: "wordlists/usernames.txt"
+  passwords_file: "wordlists/passwords.txt"
+
+# DNS enumeration settings
+dns_scan:
+  timeout: 5000  # ms
+  threads: 20
+  subdomain_enumeration: true
+  brute_force: true
+  zone_transfer: true
+  dns_servers: "8.8.8.8,8.8.4.4,1.1.1.1,9.9.9.9"
+  subdomains_file: "wordlists/subdomains.txt"
+
+# SSL/TLS scanning settings
+ssl_scan:
+  timeout: 10000  # ms
+  check_certificates: true
+  check_protocols: true
+  check_ciphers: true
+
+# Vulnerability scanning settings
+vuln_scan:
+  timeout: 30
+  aggressive: false
+
+# Exploitation settings
+exploit:
+  auto_exploit: false  # Disabled by default for safety
+  timeout: 30000  # ms
+  targets: ""  # Comma-separated list of specific vulnerabilities to target
+
+# Reporting settings
+reporting:
+  formats:
+    - text
+    - html
+    - json
+  include_screenshots: true
+  risk_levels:
+    - critical
+    - high
+    - medium
+    - low
+    - info
+
+# Proxy settings
+proxy:
+  enabled: false
+  type: "socks5"  # Options: http, https, socks4, socks5
+  host: "127.0.0.1"
+  port: 9050
+  username: ""
+  password: "" 
