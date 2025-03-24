@@ -38,7 +38,69 @@ This will create two JAR files in the `target` directory:
 
 ## Usage
 
-Basic usage:
+### Simplified Commands
+
+#### Windows
+
+A simplified command interface is provided through the `scan.bat` script for Windows users:
+
+```bash
+scan.bat TARGET SCAN_TYPE [report]
+```
+
+Examples:
+```bash
+# Basic port scan
+scan.bat 192.168.1.1 port
+
+# Web application scan with report generation
+scan.bat example.com web report
+
+# Network discovery scan
+scan.bat 192.168.1.0/24 net
+
+# Full scan with report generation
+scan.bat 192.168.1.1 full report
+```
+
+#### Linux/Mac
+
+For Linux and Mac users, use the `scan.sh` script:
+
+```bash
+# Make the script executable first
+chmod +x scan.sh
+
+# Then run your commands
+./scan.sh TARGET SCAN_TYPE [report]
+```
+
+Examples:
+```bash
+# Basic port scan
+./scan.sh 192.168.1.1 port
+
+# Web application scan with report generation
+./scan.sh example.com web report
+```
+
+#### Available Scan Types
+
+- `port` - Port scanning
+- `web` - Web application scanning
+- `service` - Service enumeration
+- `vuln` - Vulnerability scanning
+- `net` - Network discovery
+- `dns` - DNS enumeration
+- `brute` - Brute force attacks
+- `full` - Full scan (all modules except exploitation)
+
+Run `scan.bat help` or `./scan.sh help` to see usage information.
+
+### Advanced Usage
+
+For more control over the scanning process, you can use the full command syntax:
+
 ```bash
 java -jar target/offensive-scanner-1.0-SNAPSHOT-jar-with-dependencies.jar -t [target] [options]
 ```
