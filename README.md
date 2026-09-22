@@ -6,167 +6,100 @@
 
 # Offensive Scanner
 
-A comprehensive Java-based offensive security scanning tool designed for security professionals, penetration testers, and ethical hackers.
+Modular Java penetration-testing scanner: port scanning, service enumeration,
+banner grabbing, OS detection, web and SSL/TLS analysis, DNS enumeration, and
+HTML/PDF reporting — for authorized **penetration testing** labs.
 
-> **DISCLAIMER**: This tool should only be used for authorized security testing and educational purposes. Unauthorized scanning and testing against systems you don't have permission to test is illegal in most jurisdictions.
+[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
+[![Stars](https://img.shields.io/github/stars/5h4d0wn1k/offensive-scanner)](https://github.com/5h4d0wn1k/offensive-scanner)
+[![Issues](https://img.shields.io/github/issues/5h4d0wn1k/offensive-scanner)](https://github.com/5h4d0wn1k/offensive-scanner/issues)
+[![Last commit](https://img.shields.io/github/last-commit/5h4d0wn1k/offensive-scanner)](https://github.com/5h4d0wn1k/offensive-scanner)
+
+## Why
+
+Solid reconnaissance is the foundation of any professional penetration test: an
+accurate inventory of open ports, running services, web layers, and SSL/TLS
+weaknesses tells you where to focus — and gives the client the evidence trail
+they need for remediation. Offensive Scanner packages that reconnaissance into
+a single Java 11+ CLI with a clean module system — port, service, web,
+vulnerability, network, DNS, SSL/TLS, and brute-force modules — plus HTML and
+PDF report generation from scanned results. It is designed around authorized,
+scoped engagements: every module is opt-in, reports are explicit, and the
+timing/concurrency parameters live in a single config file. The scanner is only
+a legitimate instrument when pointed at systems you own or hold written
+authorization to assess.
 
 ## Features
 
-- **Port Scanning**: Detect open ports and running services
-- **Vulnerability Scanning**: Identify common security vulnerabilities
-- **Banner Grabbing**: Retrieve service banners to identify software versions
-- **Network Enumeration**: Map network topology and discover devices
-- **OS Detection**: Identify operating systems of target hosts
-- **Service Enumeration**: Detailed service version detection
-- **Web Application Scanning**: Detect common web vulnerabilities
-- **Brute Force Capabilities**: Password testing against common services
-- **DNS Enumeration**: Domain and subdomain discovery
-- **SSL/TLS Analysis**: Identify weak ciphers and certificate issues
-- **Custom Exploitation Modules**: Run basic exploitation routines
-- **Reporting**: Generate detailed HTML and PDF reports
-- **Result Database**: Store scan results for comparison and tracking
+- **Port scanning** — TCP port discovery and service fingerprinting
+- **Service enumeration** — version-level service detection
+- **Banner grabbing** — identify software and versions
+- **Network discovery** — map topology and enumerate hosts
+- **OS detection** — inference of target operating systems
+- **Web application scanning** — common web vulnerability checks
+- **SSL/TLS analysis** — weak ciphers and certificate issues
+- **DNS enumeration** — domain and subdomain discovery
+- **Brute-force module** — password testing against common services
+- **Exploitation modules** — opt-in scripts behind the `-e` flag
+- **Reporting** — HTML and PDF reports + H2 result database
 
-## Requirements
+## Quickstart
 
-- Java 11 or higher
-- Maven for building
-- Sufficient permissions for network operations (some features may require administrative/root privileges)
-
-## Building
+Requirements: Java 11+, Maven.
 
 ```bash
+# Build (produces both jars in target/)
 mvn clean package
-```
 
-This will create two JAR files in the `target` directory:
-- `offensive-scanner-1.0-SNAPSHOT.jar`: The compiled JAR without dependencies
-- `offensive-scanner-1.0-SNAPSHOT-jar-with-dependencies.jar`: The compiled JAR with all dependencies included
+# Linux/macOS helper script
+chmod +x scan.sh
+./scan.sh 192.168.1.1 port
+./scan.sh example.com web report
 
-## Usage
-
-### Simplified Commands
-
-#### Windows
-
-A simplified command interface is provided through the `scan.bat` script for Windows users:
-
-```bash
-scan.bat TARGET SCAN_TYPE [report]
-```
-
-Examples:
-```bash
-# Basic port scan
+# Windows helper script
 scan.bat 192.168.1.1 port
 
-# Web application scan with report generation
-scan.bat example.com web report
-
-# Network discovery scan
-scan.bat 192.168.1.0/24 net
-
-# Full scan with report generation
-scan.bat 192.168.1.1 full report
+# Advanced usage
+java -jar target/offensive-scanner-1.0-SNAPSHOT-jar-with-dependencies.jar \
+  -t 192.168.1.1 -f -r
 ```
 
-#### Linux/Mac
+Scan types (`scan.sh`/`scan.bat`): `port`, `web`, `service`, `vuln`, `net`,
+`dns`, `brute`, `full` — use `help` to print usage.
 
-For Linux and Mac users, use the `scan.sh` script:
-
-```bash
-# Make the script executable first
-chmod +x scan.sh
-
-# Then run your commands
-./scan.sh TARGET SCAN_TYPE [report]
-```
-
-Examples:
-```bash
-# Basic port scan
-./scan.sh 192.168.1.1 port
-
-# Web application scan with report generation
-./scan.sh example.com web report
-```
-
-#### Available Scan Types
-
-- `port` - Port scanning
-- `web` - Web application scanning
-- `service` - Service enumeration
-- `vuln` - Vulnerability scanning
-- `net` - Network discovery
-- `dns` - DNS enumeration
-- `brute` - Brute force attacks
-- `full` - Full scan (all modules except exploitation)
-
-Run `scan.bat help` or `./scan.sh help` to see usage information.
-
-### Advanced Usage
-
-For more control over the scanning process, you can use the full command syntax:
-
-```bash
-java -jar target/offensive-scanner-1.0-SNAPSHOT-jar-with-dependencies.jar -t [target] [options]
-```
-
-Examples:
-```bash
-# Basic port scan
-java -jar target/offensive-scanner-1.0-SNAPSHOT-jar-with-dependencies.jar -t 192.168.1.1 -p
-
-# Full vulnerability scan
-java -jar target/offensive-scanner-1.0-SNAPSHOT-jar-with-dependencies.jar -t example.com -f
-
-# Web application scan
-java -jar target/offensive-scanner-1.0-SNAPSHOT-jar-with-dependencies.jar -t https://example.com -w
-
-# Network discovery
-java -jar target/offensive-scanner-1.0-SNAPSHOT-jar-with-dependencies.jar -t 192.168.1.0/24 -d
-
-# Service enumeration only
-java -jar target/offensive-scanner-1.0-SNAPSHOT-jar-with-dependencies.jar -t 192.168.1.1 -s
-
-# Generate detailed report
-java -jar target/offensive-scanner-1.0-SNAPSHOT-jar-with-dependencies.jar -t 192.168.1.1 -f -r
-```
-
-### Command-line options
-
-```
--t, --target TARGET        Target to scan (IP, hostname, or IP range)
--p, --port-scan            Perform port scanning
--s, --service-enum         Perform service enumeration
--w, --web-scan             Perform web application scanning
--v, --vuln-scan            Perform vulnerability scanning
--d, --discover             Perform network discovery
--b, --brute-force          Perform brute force attacks
-    --dns-enum             Perform DNS enumeration
-    --ssl-analyze          Perform SSL/TLS analysis
--f, --full-scan            Perform full scan (all modules except exploitation)
--e, --exploit              Enable exploitation modules (use with caution)
--r, --report               Generate reports
-    --report-dir DIR       Directory to store reports
--c, --config FILE          Path to configuration file
-    --verbose              Enable verbose output
-    --debug                Enable debug output
--h, --help                 Display help message
-    --version              Display version information
-```
+Key CLI flags: `-t/--target`, `-p/--port-scan`, `-s/--service-enum`,
+`-w/--web-scan`, `-v/--vuln-scan`, `-d/--discover`, `-b/--brute-force`,
+`--dns-enum`, `--ssl-analyze`, `-f/--full-scan`, `-e/--exploit`,
+`-r/--report`, `-c/--config`.
 
 ## Configuration
 
-Edit the `src/main/resources/config.yml` file to customize scan parameters, timeouts, and other settings.
+Edit `config.yml` (top level, copied into `src/main/resources/`) to customize
+scan parameters, timeouts, and threading. Uses `src/main/resources/wordlists`
+for dictionary-based modules.
+
+## Project structure
+
+- `src/main/java/com/offensivescanner/` — core (`OffensiveScanner`, `ScanManager`,
+  `ConfigManager`, `ScanResults`) and `modules/`
+  (`PortScanner`, `ServiceEnumerator`, `WebScanner`, `VulnerabilityScanner`,
+  `NetworkScanner`, `DNSScanner`, `SSLScanner`, `BruteForceScanner`,
+  `ExploitScanner`)
+- `config.yml` — scan configuration
+- `scan.sh` / `scan.bat` — simplified command wrappers
+- `wordlists/` — default dictionaries
+
+## Legal & authorized use
+
+For **educational and authorized security testing purposes only**. Unauthorized
+scanning of systems you do not own or lack written permission to test is illegal
+in most jurisdictions. See [ETHICS.md](ETHICS.md), [SCOPE.md](SCOPE.md), and
+[SECURITY.md](SECURITY.md).
 
 ## Contributing
 
-Contributions are welcome! Please read the contributing guidelines before submitting pull requests.
+See [CONTRIBUTING.md](CONTRIBUTING.md).
 
 ## License
 
-This project is licensed under the MIT License - see the LICENSE file for details.
-
-## Acknowledgements
-
-This tool leverages several excellent open-source projects and libraries. 
+MIT — see [LICENSE](LICENSE).
